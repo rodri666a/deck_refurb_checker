@@ -86,7 +86,7 @@ def main():
         except Exception as e:
             print(f"[{ts}] Error consultando {pkg} {name}: {e}")
 
-    if true:
+    if True:
         joined = "\n".join(f"• {n}" for n in in_stock)
         text = (
             f"🔥 Steam Deck (Refurb) DISPONIBLE en {COUNTRY}\n"
