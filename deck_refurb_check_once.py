@@ -39,14 +39,18 @@ STORE_URL = "https://store.steampowered.com/sale/steamdeckrefurbished/?l=spanish
 def check_one(package_id: int, country_code: str) -> bool:
     params = {
         "packageid": str(package_id),
-        "country_code": country_code,
-        # "origin": "https://store.steampowered.com",  # opcional, pero ayuda a parecer “real”
-        # "format": "json",  # opcional
+        "country_code": country_code.upper(),
+        "origin": "https://store.steampowered.com",
+        "format": "json",
     }
     r = requests.get(API_URL, params=params, headers=HEADERS, timeout=20)
     r.raise_for_status()
     data = r.json()
-    return bool(data.get("response", {}).get("inventory_available"))
+    inv = data.get("response", {}).get("inventory_available")
+    if inv is None:
+        print("[DEBUG] Respuesta inesperada:", data)
+    return bool(inv)
+
 
 
 
@@ -91,6 +95,9 @@ def main():
                 in_stock.append(name)
         except Exception as e:
             print(f"[{ts}] Error consultando {pkg} {name}: {e}")
+        finally:
+            # 👉 rate-limit: espacio entre consultas a la API
+            time.sleep(SLEEP_BETWEEN_CALLS)
 
     if in_stock:
         joined = "\n".join(f"• {n}" for n in in_stock)
@@ -103,6 +110,7 @@ def main():
         notify_email("Steam Deck Refurb: ¡EN STOCK!", text)
     else:
         print(f"[{ts}] No hay stock en {COUNTRY}.")
+
 
 
 if __name__ == "__main__":
