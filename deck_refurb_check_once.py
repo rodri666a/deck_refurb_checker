@@ -37,11 +37,17 @@ STORE_URL = "https://store.steampowered.com/sale/steamdeckrefurbished/?l=spanish
 
 
 def check_one(package_id: int, country_code: str) -> bool:
-    params = {"packageid": str(package_id), "country_code": country_code, "format": "json"}
+    params = {
+        "packageid": str(package_id),
+        "country_code": country_code,
+        # "origin": "https://store.steampowered.com",  # opcional, pero ayuda a parecer “real”
+        # "format": "json",  # opcional
+    }
     r = requests.get(API_URL, params=params, headers=HEADERS, timeout=20)
     r.raise_for_status()
     data = r.json()
-    return bool(data.get("response", {}).get("available"))
+    return bool(data.get("response", {}).get("inventory_available"))
+
 
 
 def notify_telegram(text: str):
