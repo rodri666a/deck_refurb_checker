@@ -2,7 +2,7 @@ name: Check Steam Deck Refurb Stock
 
 on:
   schedule:
-    - cron: "*/15 * * * *"   # cada 15 minutos (UTC)
+    - cron: "*/4 * * * *"   # cada 4 minutos (UTC)
   workflow_dispatch:          # para lanzarlo manualmente cuando quieras
 
 jobs:
